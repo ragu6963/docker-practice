@@ -126,7 +126,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+react-demo/dist
 
 # Gatsby files
 .cache/
