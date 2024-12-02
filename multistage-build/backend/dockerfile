@@ -1,21 +1,23 @@
-# 1단계: Spring Boot 애플리케이션 빌드
+# 빌드 단계
 FROM eclipse-temurin:21-jdk-alpine AS build
 
 # 컨테이너 내부 작업 디렉토리 설정
 WORKDIR /app
 
-# Gradle 설정 파일 및 소스 파일 복사
+# 프로젝트 빌드를 위한 Gradle 파일 복사
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle ./gradle
 
 # 의존성 다운로드
 RUN ./gradlew dependencies --no-daemon
 
-# 애플리케이션 전체 복사 및 빌드
+# 프로젝트 전체 코드 복사
 COPY . ./
+
+# 프로젝트 빌드
 RUN ./gradlew bootJar --no-daemon
 
-# 2단계: 빌드된 애플리케이션 실행
+# 실행 단계
 FROM eclipse-temurin:21-jre-alpine
 
 # 컨테이너 내부 작업 디렉토리 설정
@@ -24,9 +26,8 @@ WORKDIR /app
 # 빌드 단계에서 생성된 JAR 파일 복사
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# Spring Boot 애플리케이션 포트 노출
+# Spring Boot 프로젝트 포트 노출
 EXPOSE 8080
 
-
-# 애플리케이션 실행 명령어 설정
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 프로젝트 실행 명령어
+CMD ["java", "-jar", "app.jar"]
