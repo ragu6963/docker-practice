@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./Article.module.css";
 import { useNavigate } from "react-router-dom";
-import articlesApi from "../api/articlesApi";
 
 export default function Article({ article, isDetail }) {
   const Navigate = useNavigate();
