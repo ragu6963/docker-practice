@@ -4,15 +4,11 @@ FROM eclipse-temurin:21-jdk-alpine AS build
 # 컨테이너 내부 작업 디렉토리 설정
 WORKDIR /app
 
-# 프로젝트 빌드를 위한 Gradle 파일 복사
-COPY build.gradle settings.gradle gradlew ./
-COPY gradle ./gradle
+# 프로젝트 전체 파일 복사
+COPY . ./
 
 # 의존성 다운로드
 RUN ./gradlew dependencies --no-daemon
-
-# 프로젝트 전체 파일 복사
-COPY . ./
 
 # 프로젝트 빌드
 RUN ./gradlew bootJar --no-daemon
