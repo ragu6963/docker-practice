@@ -1,3 +1,4 @@
-*.env
 .env.*
 docker-compose-example.yaml
+docker-compose.yaml
+frontend/
