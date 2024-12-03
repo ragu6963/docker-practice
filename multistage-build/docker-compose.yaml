@@ -1,0 +1,51 @@
+services:
+  db:
+    container_name: db-container
+    image: mysql:8.0 # dockerhub MySQL 이미지 사용
+    ports:
+      - "3306:3306" # 포트 노출
+    volumes:
+      - database_volume:/var/lib/mysql # 볼륨 지정
+    env_file:
+      - .env # 환경 변수 파일을 읽어서 환경 변수 설정
+    networks:
+      - db-connect
+
+  backend:
+    container_name: backend-container
+    build:
+      context: ./backend # 백엔드 dockerfile 경로 지정
+    ports:
+      - "8080" # 포트 노출, 동일한 네트워크의 컨테이너에서만 접근할 수 있다.
+    environment: # 백엔드 환경 변수
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    networks: # 네트워크 설정
+      - db-connect
+      - backend-connect
+    depends_on: # 의존성 설정
+      - db
+
+  frontend:
+    container_name: frontend-container
+    build:
+      context: ./frontend # 프론트엔드 dockerfile 경로 지정
+    ports:
+      - "80:80" # 포트 노출
+    environment: # 프론트엔드 환경 변수
+      VITE_API_URL: ${VITE_API_URL}
+    networks: # 네트워크 설정
+      - backend-connect
+    depends_on: # 의존성 설정
+      - backend
+      - db
+
+volumes:
+  database_volume:
+
+networks:
+  db-connect:
+  backend-connect:
