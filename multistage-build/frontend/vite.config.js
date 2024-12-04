@@ -9,6 +9,7 @@ export default defineConfig({
     compression({
       algorithm: "gzip", // Gzip 알고리즘 사용
       ext: ".gz", // 생성되는 파일의 확장자
+      threshold: 10240, // 압축 최소 크기 (10KB 이상만 압축)
     }),
   ],
   server: {
