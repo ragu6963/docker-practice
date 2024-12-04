@@ -1,0 +1,35 @@
+# docker-compose.yml
+services:
+  backend:
+    container_name: backend-example-container
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080" # "[호스트 포트]:[컨테이너 포트]"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - db-connect
+    depends_on:
+      - db
+
+  db:
+    container_name: db-example-container
+    image: mysql:8.0
+    ports:
+      - "3306" # "[컨테이너 포트]", 임의의 호스트 포트와 매핑한다.
+    env_file:
+      - .env
+    volumes:
+      - db-volume:/var/lib/mysql # [도커 volume]:[컨테이너 경로]
+    networks:
+      - db-connect
+
+volumes:
+  db-volume:
+networks:
+  db-connect:

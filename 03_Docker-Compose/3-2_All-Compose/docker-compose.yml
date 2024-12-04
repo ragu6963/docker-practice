@@ -1,0 +1,47 @@
+services:
+  db:
+    container_name: db-container
+    image: mysql:8.0
+    volumes:
+      - db-volume:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - db-connect
+
+  backend:
+    container_name: backend-container
+    build:
+      context: ./backend
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - db-connect
+      - backend-connect
+    depends_on:
+      - db
+
+  frontend:
+    container_name: frontend-container
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+    networks:
+      - backend-connect
+    depends_on:
+      - backend
+      - db
+
+volumes:
+  db-volume:
+
+networks:
+  db-connect:
+  backend-connect:
