@@ -7,6 +7,9 @@ WORKDIR /app
 # 프로젝트 전체 파일 복사
 COPY . ./
 
+# gradlew 실행 권한 추가
+RUN chmod +x gradlew
+
 # 의존성 다운로드
 RUN ./gradlew dependencies --no-daemon
 
