@@ -1,6 +1,8 @@
 # React 빌드 단계
 FROM node:23-alpine AS build
+# docker-compose의 args에서 값을 읽어온다.
 ARG VITE_API_URL
+# 빌드 시점의 환경 변수를 설정한다.
 ENV VITE_API_URL=$VITE_API_URL
 WORKDIR /app
 COPY package*.json ./
