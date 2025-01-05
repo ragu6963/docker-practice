@@ -1,16 +1,15 @@
-# 빌드 단계
+# 멀티 스테이지 빌드 활용 dockerfile
+
+# 빌드 단계 ------------------------------------
+# 별칭(AS) : build
 FROM eclipse-temurin:21-jdk-alpine AS build
 
 # 컨테이너 내부 작업 디렉토리 설정
 WORKDIR /app
 
-
 # 프로젝트 빌드를 위한 Gradle 파일 복사
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle ./gradle
-
-# gradlew 실행 권한 추가
-RUN chmod +x gradlew
 
 # 의존성 다운로드
 RUN ./gradlew dependencies --no-daemon
@@ -21,7 +20,8 @@ COPY . ./
 # 프로젝트 빌드
 RUN ./gradlew bootJar --no-daemon
 
-# 실행 단계
+# ---------------------------------------------
+# 실행 단계 ------------------------------------
 FROM eclipse-temurin:21-jre-alpine
 
 # 컨테이너 내부 작업 디렉토리 설정
@@ -33,5 +33,5 @@ COPY --from=build /app/build/libs/*.jar app.jar
 # Spring Boot 프로젝트 포트 노출
 EXPOSE 8080
 
-# 프로젝트 실행 명령어
+# 프로젝트 실행 시 명령어
 CMD ["java", "-jar", "app.jar"]
