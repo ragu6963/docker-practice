@@ -1,0 +1,23 @@
+# Node.js 이미지
+FROM node:lts
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# package.json 복사 및 의존성 설치
+COPY package*.json ./
+RUN npm install
+
+# 전체 프로젝트 파일 복사
+COPY . .
+
+# Vite 기본 포트 명시
+EXPOSE 5173
+
+# Vite 개발 서버 실행
+CMD ["npm", "run", "dev"]
+
+
+
+# docker build -t my-react .
+# docker run --rm -it -p 5173:5173 -v $(pwd):/app -v /app/node_modules my-react
