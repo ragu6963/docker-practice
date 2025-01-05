@@ -20,12 +20,11 @@ services:
     container_name: backend-container
     build:
       context: ./backend
+    image: username/backend
+    env_file:
+      - .env
     environment:
       DATABASE_HOST: db
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
     networks:
       - db-connect
       - backend-connect
@@ -40,6 +39,7 @@ services:
       context: ./frontend
       args:
         VITE_API_URL: ${VITE_API_URL}
+    image: username/frontend
     ports:
       - "80:80"
     networks:
