@@ -11,6 +11,9 @@ WORKDIR /app
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle ./gradle
 
+# gradlews 권한 변경
+RUN chmod +x gradlew
+
 # 의존성 다운로드
 RUN ./gradlew dependencies --no-daemon
 
